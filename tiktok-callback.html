@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arctic Fishing – TikTok login</title>
+<link rel="icon" href="icon.png">
+<style>
+  :root { --bg:#0f1b26; --fg:#e8eef4; --muted:#9fb3c4; --accent:#c19a6b; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:17px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:48px 16px 64px; }
+  code { display:block; background:#1a2a3a; padding:12px; border-radius:8px; word-break:break-all; margin:12px 0; }
+  button { background:var(--accent); color:#0f1b26; border:0; padding:10px 16px; border-radius:8px; font-size:1rem; cursor:pointer; }
+  .muted { color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>TikTok login received</h1>
+  <p id="msg" class="muted">Reading the authorization response…</p>
+  <code id="code"></code>
+  <button id="copy" hidden>Copy code</button>
+  <p class="muted">This page is the developer's own login callback for the Arctic Fishing publishing tool. It stores nothing and sends nothing; paste the code into the tool on your computer.</p>
+</main>
+<script>
+  const q = new URLSearchParams(location.search);
+  const code = q.get("code"), err = q.get("error"), state = q.get("state");
+  const msg = document.getElementById("msg"), box = document.getElementById("code"), btn = document.getElementById("copy");
+  if (err) { msg.textContent = "TikTok returned an error: " + err + " " + (q.get("error_description") || ""); }
+  else if (code) {
+    msg.textContent = "Authorization code (state " + (state || "-") + "). Paste this into tiktok_auth.py:";
+    box.textContent = code; btn.hidden = false;
+    btn.onclick = () => navigator.clipboard.writeText(code).then(() => btn.textContent = "Copied");
+  } else { msg.textContent = "No authorization code in the URL."; }
+</script>
+</body>
+</html>
